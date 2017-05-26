@@ -12,6 +12,9 @@ import glob from 'glob';
 import es from 'event-stream';
 import hb from 'gulp-hb';
 import rename from 'gulp-rename';
+import size from 'gulp-filesize';
+import imagemin from 'gulp-imagemin';
+import autoprefixer from 'gulp-autoprefixer';
 
 
 ////////////////
@@ -93,6 +96,7 @@ gulp.task('clean', (cb) => {
 gulp.task('sass-assets', () => {
   return gulp.src(paths.css.assets.src + '*.scss')
     .pipe(sourcemaps.init())
+    .pipe(autoprefixer(['last 5 versions', 'ie 6-11']))
     .pipe(sass.sync({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(sourcemaps.write('maps'))
     .pipe(stripCssComments({preserve: false}))
@@ -104,6 +108,7 @@ gulp.task('sass-assets', () => {
 gulp.task('sass-components', () => {
   return gulp.src(paths.css.components.src + '**/*.scss')
     .pipe(sourcemaps.init())
+    .pipe(autoprefixer(['last 5 versions', 'ie 6-11']))
     .pipe(sass.sync({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(sourcemaps.write('maps'))
     .pipe(stripCssComments({preserve: false}))
@@ -134,7 +139,7 @@ gulp.task('js-assets', (done) => {
         .transform(babelify, { presets: ["es2015"] })
         .bundle()
         .pipe(source(filename))
-        .pipe(gulp.dest(paths.js.assets.dist));
+        .pipe(gulp.dest(paths.js.assets.dist).pipe(size()))
       });
 
       es.merge(tasks).on('end', done);
@@ -156,7 +161,7 @@ gulp.task('js-components', (done) => {
         .transform(babelify, { presets: ["es2015"] })
         .bundle()
         .pipe(source(filename))
-        .pipe(gulp.dest(paths.js.components.dist));
+        .pipe(gulp.dest(paths.js.components.dist).pipe(size()))
       });
 
       es.merge(tasks).on('end', done);
@@ -206,6 +211,7 @@ gulp.task('handlebars', function () {
 
 gulp.task('images-assets', function () {
   gulp.src(paths.img.assets.src + '**/*.{png,jpg,gif}')
+  .pipe(imagemin())
   .pipe(gulp.dest(paths.img.assets.dist));
 });
 
@@ -214,6 +220,7 @@ gulp.task('images-assets', function () {
 
 gulp.task('images-components', function () {
   gulp.src(paths.img.components.src + '**/*.{png,jpg,gif}')
+  .pipe(imagemin())
   .pipe(gulp.dest(paths.img.components.dist));
 });
 
