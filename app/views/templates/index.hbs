@@ -1,0 +1,22 @@
+{{#extend "layout"}}
+
+  {{#content "head" mode="append"}}
+<title>Arrow - Template A</title>
+  <link rel="stylesheet" type="text/css" href="/assets/css/home.css" />
+  {{/content}}
+
+  {{#content "body"}}
+
+  <div class="home">
+    <h1 class="home_title">Template</h1>
+    <img src="/assets/img/earth-browser.png">
+    {{> carousel/carousel }}
+  </div>
+
+  {{/content}}
+
+  {{#content "footer" mode="append"}}
+  <script src="/assets/js/main-home.js"></script>
+  {{/content}}
+
+{{/extend}}
